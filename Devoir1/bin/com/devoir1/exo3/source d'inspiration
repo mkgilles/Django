@@ -1,0 +1,49 @@
+package com.devoir1.exo3;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Tableau extends TableauDeValeurs implements EchantillonageReg {
+	private int nbreDechantillon;
+	private List[] souListe;
+
+	public Tableau(double valeurDebut, double valeurFin) {
+		super(valeurDebut, valeurFin);
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public List<List<Double>> echantReg(int nbreDechantillon) {
+		int tail_De_souListe = list.size()/nbreDechantillon;
+
+		List<List<Double>> souListe = new ArrayList<>();
+
+		for (int i = 0; i< list.size(); i+= tail_De_souListe) {
+			souListe.add(list.subList(i, Math.min(i + tail_De_souListe, list.size())));
+
+		}
+		return souListe;
+
+	}
+
+
+	@Override
+	public void initialisationList() {
+
+		for (double i = valeurDebut; i <= valeurFin; i++) {
+			list.add(i);
+		}
+	}
+
+	@Override
+	public void echantillonnage(int nbreDechantillon) {
+		int tail_De_souListe = list.size()/nbreDechantillon;
+
+		for (int i = 0; i< list.size(); i+= tail_De_souListe) {
+			System.out.println(list.get(i));
+
+		}
+
+	}
+
+}

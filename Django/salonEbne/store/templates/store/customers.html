@@ -1,0 +1,22 @@
+<h1>Customers</h1>
+<table>
+  <thead>
+    <tr>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Boarding Pass</th>
+      <th>Email</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for customer in customers %}
+    <tr>
+      <td>{{ customer.first_name }}</td>
+      <td>{{ customer.last_name }}</td>
+      <td>{{ customer.boarding_pass }}</td>
+      <td>{{ customer.email }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<a href="{% url 'create_customer' %}">Add Customer</a>

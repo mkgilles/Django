@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8">
+    <title>Create Customer</title>
+  </head>
+  <body>
+    <h1>Create Customer</h1>
+    <form method="post">
+      {% csrf_token %}
+      <label for="first_name">First Name:</label>
+      <input type="text" id="first_name" name="first_name" required>
+      <br><br>
+      <label for="last_name">Last Name:</label>
+      <input type="text" id="last_name" name="last_name" required>
+      <br><br>
+      <label for="boarding_pass">Boarding Pass:</label>
+      <input type="text" id="boarding_pass" name="boarding_pass" required>
+      <br><br>
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+      <br><br>
+      <button type="submit">Save</button>
+    </form>
+  </body>
+</html>

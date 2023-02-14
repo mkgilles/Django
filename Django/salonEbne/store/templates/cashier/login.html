@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <title>Cashier login page</title>
+        ...
+    </head>
+    <body>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    <h2>Cashier Login</h2>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Login</button>
+    </form>
+
+    </body>
+</html>
+
+

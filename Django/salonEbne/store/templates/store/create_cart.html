@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <title>View Cart</title>
+</head>
+<body>
+  <h1>View Cart</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Product Name</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in cart %}
+      <tr>
+        <td>{{ item.product.name }}</td>
+        <td>{{ item.product.price }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>{{ item.total }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <p>Total: {{ cart.total }}</p>
+  <a href="{% url 'checkout' %}">Checkout</a>
+</body>
+</html>

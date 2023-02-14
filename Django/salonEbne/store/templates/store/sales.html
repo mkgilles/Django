@@ -1,0 +1,21 @@
+<h1>Sales</h1>
+<table>
+  <thead>
+    <tr>
+      <th>Customer</th>
+      <th>Product</th>
+      <th>Quantity</th>
+      <th>Total Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for sale in sales %}
+    <tr>
+      <td>{{ sale.customer }}</td>
+      <td>{{ sale.product }}</td>
+      <td>{{ sale.quantity }}</td>
+      <td>{{ sale.total_price }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>

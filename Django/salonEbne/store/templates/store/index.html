@@ -1,0 +1,19 @@
+
+{% extends "base.html" %}
+
+{% block title %}Index{% endblock %}
+
+{% block content %}
+  <div class="jumbotron jumbotron-fluid">
+    <div class="container">
+      <h1 class="display-4">Bienvenue au Salon Ebene</h1>
+      <p class="lead">C'est la page d'accueil du salon. Vous pouvez trouver des informations sur le salon et ses services ici.</p>
+      <hr class="my-4">
+      <p>Veuillez utiliser la barre de navigation pour trouver la page souhaitée.</p>
+      <p class="lead">
+        <a class="btn btn-primary btn-lg" href="#" role="button">En savoir plus</a>
+        <a class="btn btn-primary btn-lg" href="{% url 'cashier_login' %}" role="button">Se connecter</a>
+      </p>
+    </div>
+  </div>
+{% endblock %}

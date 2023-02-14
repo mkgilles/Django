@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Salon{% endblock %}</title>
+  <style>
+    /* Add styles for header, main, and footer */
+    header {
+      background-color: #333;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px;
+    }
+
+    header h1 {
+      margin: 0;
+    }
+
+    header nav ul {
+      display: flex;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    header nav a {
+      color: white;
+      text-decoration: none;
+      padding: 10px 20px;
+    }
+
+    main {
+      padding: 20px;
+    }
+
+    footer {
+      background-color: #333;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 50px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Salon</h1>
+    <nav>
+      <ul>
+        <li><a href="{% url 'cashier_login' %}">Login</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+  <footer>
+    <p>Copyright © {{ current_year }} Salon</p>
+  </footer>
+</body>
+</html>

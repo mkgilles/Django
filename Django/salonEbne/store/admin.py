@@ -2,8 +2,8 @@ from django.contrib import admin
 from store.models import Product, Cashier
 
 # Register your models here.
-admin.site.register(Product)
-admin.site.register(Cashier)
+#admin.site.register(Product)
+#admin.site.register(Cashier)
 
 
 # Administration of Order and Sales

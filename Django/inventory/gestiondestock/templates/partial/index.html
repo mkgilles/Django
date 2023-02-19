@@ -1,0 +1,13 @@
+{% extends 'partial/base.html' %}
+{% load i18n %}
+{% block title %}{% trans "Homepage" %}{% endblock %}
+
+{% block content %}
+    <main class="px-3">
+    <h1>Welcome to Salon Ebene</h1>
+    <p class="lead">At Salon Ebene, we pride ourselves on providing a range of services that cater to your needs. Our team of skilled and experienced professionals are dedicated to ensuring that you receive the highest level of care and attention, so you can leave feeling refreshed.</p>
+    <p class="lead">Whether you're in need of a quick pick-me-up, Salon Ebene has got you covered. So why not come in, sit back, and let us take care of you? We look forward to seeing you soon.</p>
+      <a href="{% url 'user_login' %}" class="btn btn-lg btn-secondary fw-bold border-white bg-white">Se connecter</a>
+    </p>
+  </main>
+{% endblock %}

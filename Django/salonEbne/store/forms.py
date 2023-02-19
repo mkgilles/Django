@@ -1,5 +1,6 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.models import User
 
 from .models import Customer, Product, Sale, Cashier
 from django import forms
@@ -24,10 +25,26 @@ class SaleForm(forms.ModelForm):
         fields = ['customer', 'product', 'quantity', 'total_price']
 
 
-class CashierForm(forms.ModelForm):
+class CashierForm(UserCreationForm):
+    first_name = forms.CharField(max_length=50)
+    last_name = forms.CharField(max_length=50)
+
     class Meta:
-        model = Cashier
-        fields = ['first_name', 'last_name', 'username', 'password']
+        model = User
+        fields = ['username', 'password1', 'password2']
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.first_name = self.cleaned_data['first_name']
+        user.last_name = self.cleaned_data['last_name']
+        if commit:
+            user.save()
+            cashier = Cashier.objects.create(user=user)
+            cashier.save()
+        return user
+        widgets = {
+            'password': forms.PasswordInput(),
+        }
 
 
 class CartForm(forms.ModelForm):

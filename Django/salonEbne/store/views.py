@@ -1,12 +1,10 @@
 import pdb
-
 from django.contrib.auth import login
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from .models import Customer, Product, Sale, Cashier, Order, Admin
-from django.shortcuts import render, redirect
 from .models import Product, Sale, Cart
-from .forms import CartForm
+from .forms import CartForm, CashierForm
 
 
 # logger = logging.getLogger(__name__)
@@ -87,10 +85,13 @@ def create_sale(request):
 
 def create_cashier(request):
     if request.method == 'POST':
-        first_name = request.POST['first_name']
-        last_name = request.POST['last_name']
-        username = request.POST['username']
-        password = request.POST['password']
+        form = CashierForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('cashier_list')
+    else:
+        form = CashierForm()
+    return render(request, 'cashier/create_cashier.html', {'form': form})
 
 
 from .models import Customer, Product, Sale, Cashier, Order
@@ -109,7 +110,7 @@ def add_to_cart(request, product_id):
 def view_cart(request):
     cart = request.session.get('cart', [])
     total = sum(item['price'] for item in cart)
-    return render(request, 'view_cart.html', {'cart': cart, 'total': total})
+    return render(request, 'cashier/cart.html', {'cart': cart, 'total': total})
 
 
 def checkout(request):
@@ -144,7 +145,7 @@ def view_cart(request):
         'form': form,
         'cart': cart,
     }
-    return render(request, 'view_cart.html', context)
+    return render(request, 'cashier/cart.html', context)
 
 
 def success(request):
@@ -203,7 +204,7 @@ def checkout(request):
         sale.save()
 
         # Redirect to the cart page
-        return redirect('cart')
+        return redirect('view_cart')
 
     # If the request method is GET, render the checkout page
     products = Product.objects.all()
@@ -220,16 +221,13 @@ def add_to_cart(request, product_id):
         cart_item.save()
     else:
         cart_item = cart.cart_items.create(product=product, quantity=1)
-    return redirect('view_cart')
+    return redirect('cart')
 
 
 def remove_from_cart(request, cart_item_id):
     cart_item = Cart.objects.first().cart_items.get(id=cart_item_id)
     cart_item.delete()
     return redirect('view_cart')
-
-
-
 
 
 import logging
@@ -277,10 +275,128 @@ def cashier_login(request):
             if user is not None:
                 login(request, user)
                 pdb.set_trace()
-                return redirect('cashier_home')
+                return redirect('cashier_home', permanent=True)
             else:
                 error_message = 'Incorrect username or password. Please try again.'
                 return render(request, 'cashier_login.html', {'form': form, 'error': error_message})
     else:
         form = CashierLoginForm()
     return render(request, 'cashier_login.html', {'form': form})
+
+
+# User account profile
+
+@login_required
+def profile(request):
+    # Logic to retrieve the user's profile data and render the profile template
+    return render(request, 'store/profile.html')
+
+
+# Cashiers dashboard
+
+@login_required
+def cashier_dashboard(request):
+    # Logic to retrieve data for the cashier dashboard and render the template
+    return render(request, 'cashier/cashier_dashboard.html')
+
+#Update views to enhance functonalies
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .models import Product, Sale, Customer, OrderItem
+
+@login_required
+def index(request):
+    products = Product.objects.all()
+    context = {'products': products}
+    return render(request, 'index.html', context)
+
+
+@login_required
+def cart(request):
+    customer = Customer.objects.get(user=request.user)
+    cart_items = customer.cart_set.all()
+    context = {'cart_items': cart_items}
+    return render(request, 'cashier/cart.html', context)
+
+
+@login_required
+def add_to_cart(request, product_id):
+    product = get_object_or_404(Product, pk=product_id)
+    customer = Customer.objects.get(user=request.user)
+    cart_item, created = customer.cart_set.get_or_create(product=product)
+
+    if not created:
+        cart_item.quantity += 1
+        cart_item.save()
+
+    return redirect('cart')
+
+
+@login_required
+def checkout(request):
+    customer = Customer.objects.get(user=request.user)
+    cart_items = customer.cart_set.all()
+    total = sum([item.price for item in cart_items])
+    context = {'cart_items': cart_items, 'total': total}
+    return render(request, 'checkout.html', context)
+
+
+@login_required
+def place_order(request):
+    if request.method == 'POST':
+        customer = Customer.objects.get(user=request.user)
+        cart_items = customer.cart_set.all()
+        order_total = sum([item.price for item in cart_items])
+        order = Order.objects.create(
+            customer_name=customer.first_name + ' ' + customer.last_name,
+            customer_email=customer.email,
+            order_total=order_total,
+            order_status='Pending'
+        )
+
+        for item in cart_items:
+            Sale.objects.create(
+                customer=customer,
+                product=item.product,
+                quantity=item.quantity,
+                total_price=item.price
+            )
+            item.delete()
+
+        return redirect('order_confirmation')
+
+
+@login_required
+def order_confirmation(request):
+    return render(request, 'order_confirmation.html')
+
+
+@login_required
+def order_history(request):
+    customer = Customer.objects.get(user=request.user)
+    sales = Sale.objects.filter(customer=customer)
+    context = {'sales': sales}
+    return render(request, 'order_history.html', context)
+
+
+@login_required
+def order_item(request, pk):
+    order_item = get_object_or_404(OrderItem, pk=pk)
+    context = {'order_item': order_item}
+    return render(request, 'order_item.html', context)
+
+
+@login_required
+def add_to_order(request, product_id):
+    product = get_object_or_404(Product, pk=product_id)
+    order_item, created = OrderItem.objects.get_or_create(
+        product=product,
+        user=request.user,
+        quantity=1
+    )
+
+    if not created:
+        order_item.quantity += 1
+        order_item.save()
+
+    return redirect('cart')

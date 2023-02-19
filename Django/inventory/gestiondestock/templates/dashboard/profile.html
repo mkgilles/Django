@@ -1,0 +1,19 @@
+<html lang="fr">
+
+<body>
+
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Profile</h1>
+    <p>Welcome, {{ user.username }}!</p>
+    <p>Your email address is: {{ user.email }}</p>
+    <p>Your full name is: {{ user.get_full_name }}</p>
+
+    <p>View the <a href="{% url 'cashier_dashboard' %}">Your dashboard</a>.</p>
+{% endblock %}
+
+
+</body>
+
+</html>

@@ -1,0 +1,13 @@
+  {% extends 'dashboard/dashboard_base.html' %}
+{% block title %}Liste des produits{% endblock %}
+    {% for product in products %}
+    <tr>
+      <td>{{ product.name }}</td>
+      <td>{{ product.description }}</td>
+      <td>{{ product.price }}</td>
+      <td>{{ product.stock }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<a href="{% url 'create_product' %}">Add Product</a>
